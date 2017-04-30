@@ -1,0 +1,16 @@
+/*
+!/gradle/
+!/gradle/*
+!/gradle*
+!/src/
+!/src/*
+!/gen/
+!/gen/*
+!/resources/
+!/resources/*
+!/*.gradle
+/.gradle/
+!/build.properties
+!/*.md
+!/LICENSE
+!/.gitignore

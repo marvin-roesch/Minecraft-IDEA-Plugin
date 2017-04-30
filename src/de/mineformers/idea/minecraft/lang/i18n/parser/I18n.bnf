@@ -1,0 +1,23 @@
+{
+  parserClass="de.mineformers.idea.minecraft.lang.i18n.parser.I18nParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="I18n"
+  psiImplClassSuffix="Impl"
+  psiPackage="de.mineformers.idea.minecraft.lang.i18n.psi"
+  psiImplPackage="de.mineformers.idea.minecraft.lang.i18n.psi.impl"
+
+  elementTypeHolderClass="de.mineformers.idea.minecraft.lang.i18n.psi.I18nTypes"
+  elementTypeClass="de.mineformers.idea.minecraft.lang.i18n.psi.I18nElementType"
+  tokenTypeClass="de.mineformers.idea.minecraft.lang.i18n.psi.I18nTokenType"
+
+  psiImplUtilClass="de.mineformers.idea.minecraft.lang.i18n.psi.I18nPsiUtil"
+}
+
+simpleFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY SEPARATOR VALUE?) {mixin="de.mineformers.idea.minecraft.lang.i18n.psi.impl.I18nNamedElementImpl"
+                                       implements="de.mineformers.idea.minecraft.lang.i18n.psi.I18nNamedElement" methods=[getKey getValue getName setName getNameIdentifier getPresentation toString]}

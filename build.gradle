@@ -1,0 +1,57 @@
+buildscript {
+    ext.kotlin_version = '1.1.2-2'
+    repositories {
+        mavenCentral()
+    }
+
+    ext.kotlin_version = '1.0.3'
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+plugins {
+    id "org.jetbrains.intellij" version "0.1.10"
+}
+
+apply plugin: 'idea'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
+}
+
+intellij {
+    version 'IC-2016.2' //IntelliJ IDEA dependency
+    plugins = ["gradle", "Groovy", "Kotlin", "org.intellij.scala:2016.2.0"] //Bundled plugin dependencies
+    pluginName 'minecraft'
+    downloadSources true
+}
+
+group 'de.mineformers.idea.minecraft'
+version '0.2.0' // Plugin version
+
+dependencies {
+    compile files("${intellij.sandboxDirectory}/plugins/gradle/lib/gradle.jar")
+    compile files("${intellij.sandboxDirectory}/plugins/Groovy/lib/Groovy.jar")
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src', 'gen']
+        }
+        resources {
+            srcDirs = ['resources']
+        }
+    }
+}
+repositories {
+    mavenCentral()
+}

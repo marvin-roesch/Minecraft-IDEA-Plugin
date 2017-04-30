@@ -1,0 +1,143 @@
+<idea-plugin version="2">
+    <id>de.mineformers.idea.minecraft</id>
+    <name>Minecraft</name>
+    <version>0.2.0</version>
+    <vendor url="http://www.mineformers.de">MineFormers</vendor>
+
+    <depends>org.jetbrains.plugins.gradle</depends>
+    <depends>org.intellij.groovy</depends>
+    <depends optional="true">org.jetbrains.kotlin</depends>
+    <depends optional="true">org.intellij.scala</depends>
+
+    <description><![CDATA[
+      Provides various tools for developing Minecraft mods
+    ]]></description>
+
+    <change-notes><![CDATA[
+      <h2>Version 0.2.0</h2>
+      <ul>
+        <li>
+          Reworked localization support
+          <ul>
+            <li>Supports a broader set of custom translation functions now</li>
+            <li>Basic references for setters like Item.setUnlocalizedName and Block.setUnlocalizedName</li>
+            <li>Finding usages for and renaming translation keys works properly now</li>
+          </ul>
+        </li>
+        <li>
+          Added basic MCMeta validation framework (currently only sounds.json is support)
+        </li>
+      </ul>
+      <h2>Version 0.1.0</h2>
+      <ul>
+        <li>
+          Added localization support
+          <ul>
+            <li>Syntax Highlighting</li>
+            <li>Inspections for missing, duplicate or mismatched translations</li>
+            <li>References and inspections from Java code</li>
+          </ul>
+        </li>
+        <li>
+          Added basic MCMeta support
+          <ul>
+            <li>Syntax Highlighting</li>
+          </ul>
+        </li>
+      </ul>
+    ]]>
+    </change-notes>
+
+    <idea-version since-build="145"/>
+
+    <depends>org.jetbrains.plugins.gradle</depends>
+    <depends optional="true" config-file="json-compat.xml">com.intellij.modules.json</depends>
+
+    <extensionPoints>
+        <extensionPoint name="frameworkSupport"
+                        interface="de.mineformers.idea.minecraft.frameworkSupport.MinecraftFrameworkSupportProvider"/>
+    </extensionPoints>
+
+    <extensions defaultExtensionNs="de.mineformers.idea.minecraft">
+        <frameworkSupport
+                implementation="de.mineformers.idea.minecraft.frameworkSupport.ForgeFrameworkSupportProvider"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!--Localization-->
+        <lang.parserDefinition language="MCLang"
+                               implementationClass="de.mineformers.idea.minecraft.lang.i18n.parser.I18nParserDefinition"/>
+        <lang.syntaxHighlighterFactory key="MCLang"
+                                       implementationClass="de.mineformers.idea.minecraft.lang.i18n.style.I18nSyntaxHighlighterFactory"/>
+        <fileTypeFactory implementation="de.mineformers.idea.minecraft.lang.i18n.file.I18nFileTypeFactory"/>
+        <annotator language="MCLang" implementationClass="de.mineformers.idea.minecraft.lang.i18n.I18nAnnotator"/>
+        <psi.referenceContributor language="JAVA"
+                                  implementation="de.mineformers.idea.minecraft.lang.i18n.reference.I18nJavaReferenceContributor"/>
+        <psi.referenceContributor language="MCLang"
+                                  implementation="de.mineformers.idea.minecraft.lang.i18n.reference.I18nReferenceContributor"/>
+        <lang.foldingBuilder language="JAVA"
+                             implementationClass="de.mineformers.idea.minecraft.lang.i18n.I18nFoldingBuilder"/>
+        <editorNotificationProvider
+                implementation="de.mineformers.idea.minecraft.lang.i18n.I18nEditorNotificationProvider"/>
+        <lang.formatter language="MCLang"
+                        implementationClass="de.mineformers.idea.minecraft.lang.i18n.formatting.I18nFormattingModelBuilder"/>
+        <colorSettingsPage implementation="de.mineformers.idea.minecraft.lang.i18n.style.I18nColorSettingsPage"/>
+        <lang.psiStructureViewFactory language="MCLang"
+                                      implementationClass="de.mineformers.idea.minecraft.lang.i18n.structure.I18nStructureViewFactory"/>
+        <gotoSymbolContributor
+                implementation="de.mineformers.idea.minecraft.lang.i18n.reference.I18nGotoSymbolContributor"/>
+        <intentionAction>
+            <className>de.mineformers.idea.minecraft.codeInsight.intentions.ConvertToTranslationIntention</className>
+            <category>Minecraft</category>
+            <descriptionDirectoryName>ConvertToTranslationIntention</descriptionDirectoryName>
+        </intentionAction>
+        <inspectionToolProvider
+                implementation="de.mineformers.idea.minecraft.codeInsight.inspections.MinecraftInspectionsProvider"/>
+        <lang.findUsagesProvider language="MCLang"
+                                 implementationClass="de.mineformers.idea.minecraft.lang.i18n.reference.I18nFindUsagesProvider"/>
+        <elementDescriptionProvider
+                implementation="de.mineformers.idea.minecraft.lang.i18n.reference.I18nDescriptionProvider"/>
+        <customPropertyScopeProvider
+                implementation="de.mineformers.idea.minecraft.lang.i18n.reference.I18nScopeProvider"/>
+        <renameInputValidator
+                implementation="de.mineformers.idea.minecraft.lang.i18n.reference.I18nRenameInputValidator"/>
+        <referencesSearch implementation="de.mineformers.idea.minecraft.lang.i18n.reference.I18nReferencesSearcher"/>
+
+        <moduleBuilder builderClass="de.mineformers.idea.minecraft.project.wizard.ForgeModuleBuilder"/>
+    </extensions>
+
+    <application-components>
+        <component>
+            <implementation-class>de.mineformers.idea.minecraft.lang.i18n.I18nFileListener</implementation-class>
+        </component>
+    </application-components>
+
+    <project-components>
+
+        <component>
+            <implementation-class>de.mineformers.idea.minecraft.MinecraftDetector</implementation-class>
+        </component>
+    </project-components>
+
+    <actions>
+        <action id="idea.plugin.minecraft.actions.ConvertToTranslation"
+                class="de.mineformers.idea.minecraft.codeInsight.actions.ConvertToTranslationAction"
+                text="Convert string literal to translation"
+                description="Converts any string literal into a Minecraft localization translation">
+        </action>
+
+        <action id="idea.plugin.minecraft.actions.SortTranslations"
+                class="de.mineformers.idea.minecraft.lang.i18n.codeInsight.actions.SortTranslationsAction"
+                text="Sort translations by specified order"
+                description="Sorts translations by specified order">
+        </action>
+
+        <group id="MinecraftEditor" popup="true" text="Minecraft"
+               class="de.mineformers.idea.minecraft.codeInsight.actions.MinecraftActionGroup">
+            <reference ref="idea.plugin.minecraft.actions.ConvertToTranslation"/>
+            <reference ref="idea.plugin.minecraft.actions.SortTranslations"/>
+            <add-to-group anchor="after" group-id="EditorLangPopupMenu" relative-to-action="Generate"/>
+        </group>
+    </actions>
+
+</idea-plugin>

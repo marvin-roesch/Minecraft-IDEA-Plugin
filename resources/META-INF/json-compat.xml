@@ -1,0 +1,9 @@
+<idea-plugin version="2">
+    <extensions defaultExtensionNs="JavaScript.JsonSchema">
+        <ProviderFactory implementation="de.mineformers.idea.mcmeta.SchemaProviderFactory"/>
+    </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!--MCMeta-->
+        <fileTypeFactory implementation="de.mineformers.idea.mcmeta.MCMetaFileTypeFactory"/>
+    </extensions>
+</idea-plugin>
